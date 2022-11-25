@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import messagebox, filedialog
 import threading
-from en_de_code import encodeImage,decodeImg,compress
+from en_de_code import encodeImage,decodeImg
 
 class Main:
     # Creating the window
@@ -84,11 +84,9 @@ class Main:
 
             if bool(Main.encodeOption.get()):
                 Main.report.set(Main.report.get()+"\n[+] Compression started..")
-                Main.imagePath.set(compress(Main.imagePath.get(),(Main.compression.get()/100),Main.imageTo.get(),Main.compression.get()))
-                Main.report.set(Main.report.get()+"\n[+] Compression Complete..")
                 Main.report.set(Main.report.get()+"\n[+] Huffman Encoding started..")
                 encode = encodeImage(Main.imagePath.get(),Main.imageTo.get(),Main.report)
-                decodeImg(encode,Main.imageTo.get(),Main.report)
+                decodeImg(encode,Main.imageTo.get(),Main.report,Main.compression.get()/100)
         else:
             messagebox.showinfo("showinfo", "Please select Both paths")
 

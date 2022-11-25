@@ -13,16 +13,6 @@ def remove_items(test_list, item):
 
     return res
 
-def compress(img,newRatio,saveAt,quality):
-    print(type(newRatio),type(quality))
-    if quality < 90:
-        newRatio =0.9
-        quality = 90
-    img = Image.open(img)
-    img = img.resize((int(img.size[0] * newRatio), int(img.size[1] * newRatio)),Image.ANTIALIAS)
-    img.save(str(saveAt+'/encoded.bmp'), quality= quality, optimize=True)
-    return str(saveAt+'/encoded.bmp')
-
 # defining block size
 block_size = 8
 
@@ -35,8 +25,17 @@ QUANTIZATION_MAT = np.array(
 
 def encodeImage(image,saveAt,report):
     report.set(str(report.get()) + ("\n[+] Encoding Started:" + str("")))
-    img1 = cv2.imread(image, cv2.IMREAD_UNCHANGED)
-    b, g, r = cv2.split(img1)
+
+    try :
+        img1 = cv2.imread(image, cv2.IMREAD_COLOR)
+
+        b, g, r = cv2.split(img1)
+
+    except:
+        img = Image.open(image)
+        img1 = np.array(img)
+        b, g, r = cv2.split(img1)
+
     report.set(str(report.get()) + ("\n[+] Image Split .. "))
 
     # get size of the image
@@ -74,7 +73,7 @@ def encodeImage(image,saveAt,report):
     padded_img3[0:height, 0:width] = r[0:height, 0:width]
 
 
-    # Start encoding:
+    # start encoding:
     # divide image into block size by block size (here: 8-by-8) blocks
     # To each block apply 2D discrete cosine transform
     # reorder DCT coefficients in zig-zag order
@@ -120,7 +119,6 @@ def encodeImage(image,saveAt,report):
             padded_img2[row_ind_1: row_ind_2, col_ind_1: col_ind_2] = reshapedG
             padded_img3[row_ind_1: row_ind_2, col_ind_1: col_ind_2] = reshapedR
 
-
     padded_image_merge = cv2.merge([padded_img, padded_img2, padded_img3])
 
     cv2.imwrite(saveAt+'/encoded.bmp', np.uint8(padded_image_merge))
@@ -157,7 +155,6 @@ def encodeImage(image,saveAt,report):
     return [[bitstream1, bitstream2, bitstream3],[tree1, tree2, tree3],padded_img.shape]
 
 
- # Start decoding:
 def getActualImage(array,h,w):
     # loop for constructing intensity matrix form frequency matrix (IDCT and all)
     i = 0
@@ -194,7 +191,7 @@ def decode(imageR,H,W):
     return getActualImage(np.array([[res[i + j * W] for i in range(W)] for j in range(H)]),H,W)
 
 
-def decodeImg(encode,saveAt,report):
+def decodeImg(encode,saveAt,report,ratio):
     H,W = encode[2]
     report.set(str(report.get()) + ("\n[+] Huffman decoding started  .. "))
 
@@ -220,5 +217,5 @@ def decodeImg(encode,saveAt,report):
     image = cv2.merge([imageR, imageG, imageB])
 
     cv2.imwrite(saveAt + '/final.bmp', np.uint8(image))
-
     report.set(str(report.get()) + ("\n\n[+] Final Decoded image Saved .. "))
+    report.set(report.get() + "\n[+] Compression Complete..")
