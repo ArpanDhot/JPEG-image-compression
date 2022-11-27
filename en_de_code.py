@@ -7,11 +7,13 @@ from Threads import *
 from PIL import Image
 import cv2
 
+
 def remove_items(test_list, item):
     # using list comprehension to perform the task
     res = [i for i in test_list if i not in item]
 
     return res
+
 
 # defining block size
 block_size = 8
@@ -23,10 +25,10 @@ QUANTIZATION_MAT = np.array(
      [49, 64, 78, 87, 103, 121, 120, 101], [72, 92, 95, 98, 112, 100, 103, 99]])
 
 
-def encodeImage(image,saveAt,report):
+def encodeImage(image, saveAt, report):
     report.set(str(report.get()) + ("\n[+] Encoding Started:" + str("")))
 
-    try :
+    try:
         img1 = cv2.imread(image, cv2.IMREAD_COLOR)
 
         b, g, r = cv2.split(img1)
@@ -71,7 +73,6 @@ def encodeImage(image,saveAt,report):
     padded_img[0:height, 0:width] = b[0:height, 0:width]
     padded_img2[0:height, 0:width] = g[0:height, 0:width]
     padded_img3[0:height, 0:width] = r[0:height, 0:width]
-
 
     # start encoding:
     # divide image into block size by block size (here: 8-by-8) blocks
@@ -121,10 +122,10 @@ def encodeImage(image,saveAt,report):
 
     padded_image_merge = cv2.merge([padded_img, padded_img2, padded_img3])
 
-    cv2.imwrite(saveAt+'/encoded.bmp', np.uint8(padded_image_merge))
+    cv2.imwrite(saveAt + '/encoded.bmp', np.uint8(padded_image_merge))
     report.set(str(report.get()) + ("\n[+] Encoded image Saved .. "))
 
-    flattenImages = [padded_img.flatten(),padded_img2.flatten(),padded_img3.flatten()]
+    flattenImages = [padded_img.flatten(), padded_img2.flatten(), padded_img3.flatten()]
 
     report.set(str(report.get()) + ("\n[+] Huffman Encoding started .. "))
     t1 = ThreadWithReturnValue(target=Huffman_Encoding, args=(flattenImages[0],))
@@ -144,18 +145,46 @@ def encodeImage(image,saveAt,report):
 
     bitstream = bitstream1 + "Chnl_Chng" + bitstream2 + " " + bitstream3
 
-    # Written to image.txt
-    file1 = open(saveAt+"/image.txt", "w")
-    file1.write(bitstream)
-    report.set(str(report.get()) + ("\n[+] '.txt' File Saved .. "))
 
-    report.set(str(report.get()) + ("\n\n\n[+] All Processes complete .. "))
-    file1.close()
-
-    return [[bitstream1, bitstream2, bitstream3],[tree1, tree2, tree3],padded_img.shape]
+    # TODO the objective is not to save the file here but to actually store it in the memory and compare it with the
+    #  original image size
 
 
-def getActualImage(array,h,w):
+    # # Written to image.txt
+    # file1 = open(saveAt+"/image.txt", "w")
+    # file1.write(bitstream)
+    # report.set(str(report.get()) + ("\n[+] '.txt' File Saved .. "))
+    #
+    # report.set(str(report.get()) + ("\n\n\n[+] All Processes complete .. "))
+    # file1.close()
+    #
+    # return [[bitstream1, bitstream2, bitstream3],[tree1, tree2, tree3],padded_img.shape]
+
+    # calculate the number of bits to transmit for each channel
+    # and write them to an output file
+    # file = open("CompressedImage.asfh", "w")
+    # yBitsToTransmit = str()
+    # for value in yEncoded:
+    #     yBitsToTransmit += yHuffman[value]
+    #
+    # crBitsToTransmit = str()
+    # for value in crEncoded:
+    #     crBitsToTransmit += crHuffman[value]
+    #
+    # cbBitsToTransmit = str()
+    # for value in cbEncoded:
+    #     cbBitsToTransmit += cbHuffman[value]
+    #
+    # if file.writable():
+    #     file.write(yBitsToTransmit + "\n" + crBitsToTransmit + "\n" + cbBitsToTransmit)
+    # file.close()
+
+    totalNumberOfBitsAfterCompression = len(bitstream1) + len(bitstream2) + len(bitstream3)
+    print(totalNumberOfBitsAfterCompression)
+   # print("Compression Ratio is " + str(np.round(totalNumberOfBitsWithoutCompression / totalNumberOfBitsAfterCompression, 1)))
+
+
+def getActualImage(array, h, w):
     # loop for constructing intensity matrix form frequency matrix (IDCT and all)
     i = 0
     j = 0
@@ -182,22 +211,22 @@ def getActualImage(array,h,w):
     return padded_img
 
 
-def decode(imageR,H,W):
+def decode(imageR, H, W):
     res = imageR.strip('][').split(', ')
 
     res = np.array(res)
     res = res.astype(np.float)
 
-    return getActualImage(np.array([[res[i + j * W] for i in range(W)] for j in range(H)]),H,W)
+    return getActualImage(np.array([[res[i + j * W] for i in range(W)] for j in range(H)]), H, W)
 
 
-def decodeImg(encode,saveAt,report,ratio):
-    H,W = encode[2]
+def decodeImg(encode, saveAt, report, ratio):
+    H, W = encode[2]
     report.set(str(report.get()) + ("\n[+] Huffman decoding started  .. "))
 
-    t1 = ThreadWithReturnValue(target=decode, args=(Huffman_Decoding(encode[0][0], encode[1][0]),H,W,))
-    t2 = ThreadWithReturnValue(target=decode, args=(Huffman_Decoding(encode[0][1], encode[1][1]),H,W,))
-    t3 = ThreadWithReturnValue(target=decode, args=(Huffman_Decoding(encode[0][2], encode[1][2]),H,W,))
+    t1 = ThreadWithReturnValue(target=decode, args=(Huffman_Decoding(encode[0][0], encode[1][0]), H, W,))
+    t2 = ThreadWithReturnValue(target=decode, args=(Huffman_Decoding(encode[0][1], encode[1][1]), H, W,))
+    t3 = ThreadWithReturnValue(target=decode, args=(Huffman_Decoding(encode[0][2], encode[1][2]), H, W,))
 
     report.set(str(report.get()) + ("\n[+] Threads Started .. "))
 
