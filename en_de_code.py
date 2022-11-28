@@ -234,4 +234,4 @@ def decodingDriver(encode, saveAt, report):
     report.set(str(report.get()) + ("\n\n[+]  " + 50 * "-"))
     report.set(str(report.get()) + ("\n[+] Compression file size is " + str(np.round(CodedbitsSize, 1)) + " MB"))
     report.set(str(report.get()) + ("\n[+] Compression ratio is " + str(np.round(encodedSize / CodedbitsSize, 1))))
-    report.set(str(report.get()) + ("\n[+] Compression percentage is " + str(np.round(encodedSize / CodedbitsSize, 1))))
+    report.set(str(report.get()) + ("\n[+] Compression percentage is " + str(np.round((CodedbitsSize/encodedSize)*100, 1))))
