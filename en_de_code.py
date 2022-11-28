@@ -1,22 +1,17 @@
+import os
 import cv2
 import math
 import numpy as np
 from zigzag import *
-from huffman import *
 from Threads import *
 from PIL import Image
 import cv2
-
-
-def remove_items(test_list, item):
-    # using list comprehension to perform the task
-    res = [i for i in test_list if i not in item]
-
-    return res
-
+from runLengthEncoding import *
 
 # defining block size
 block_size = 8
+
+global encodedSize, CodedbitsSize
 
 # Quantization Matrix
 QUANTIZATION_MAT = np.array(
@@ -25,18 +20,41 @@ QUANTIZATION_MAT = np.array(
      [49, 64, 78, 87, 103, 121, 120, 101], [72, 92, 95, 98, 112, 100, 103, 99]])
 
 
-def encodeImage(image, saveAt, report):
-    report.set(str(report.get()) + ("\n[+] Encoding Started:" + str("")))
+# If resizing needed then use this code
+# def ImgResize(image, resize):
+#     global imagePath
+#     imagePath = image
+#     try:
+#         img1 = cv2.imread(image, cv2.IMREAD_COLOR)
+#         b, g, r = cv2.split(img1)
+#     except:
+#         img = Image.open(image)
+#         img1 = np.array(img)
+#         b, g, r = cv2.split(img1)
+#
+#     [h, w] = b.shape
+#
+#     h = int(h * resize)
+#     w = int(w * resize)
+#
+#     b = cv2.resize(b, (w, h), interpolation=cv2.INTER_AREA)
+#     g = cv2.resize(g, (w, h), interpolation=cv2.INTER_AREA)
+#     r = cv2.resize(r, (w, h), interpolation=cv2.INTER_AREA)
+#
+#     return cv2.merge([b, g, r])
 
+
+# Encoding is being done here
+def encodingDriver(image, saveAt, report):
     try:
         img1 = cv2.imread(image, cv2.IMREAD_COLOR)
-
-        b, g, r = cv2.split(img1)
-
     except:
         img = Image.open(image)
         img1 = np.array(img)
-        b, g, r = cv2.split(img1)
+
+    report.set(str(report.get()) + ("\n[+] Encoding Started:" + str("")))
+
+    b, g, r = cv2.split(img1)
 
     report.set(str(report.get()) + ("\n[+] Image Split .. "))
 
@@ -125,71 +143,49 @@ def encodeImage(image, saveAt, report):
     cv2.imwrite(saveAt + '/encoded.bmp', np.uint8(padded_image_merge))
     report.set(str(report.get()) + ("\n[+] Encoded image Saved .. "))
 
-    flattenImages = [padded_img.flatten(), padded_img2.flatten(), padded_img3.flatten()]
+    # Calculating size of encoded image
+    file_name2 = str(saveAt + '/encoded.bmp')
+    file_stats = os.stat(file_name2)
+    global encodedSize, CodedbitsSize
+    encodedSize = (file_stats.st_size / (1024 * 1024))
 
-    report.set(str(report.get()) + ("\n[+] Huffman Encoding started .. "))
-    t1 = ThreadWithReturnValue(target=Huffman_Encoding, args=(flattenImages[0],))
-    t2 = ThreadWithReturnValue(target=Huffman_Encoding, args=(flattenImages[1],))
-    t3 = ThreadWithReturnValue(target=Huffman_Encoding, args=(flattenImages[2],))
+    flattenImages = [str(padded_img.flatten().tolist()), str(padded_img2.flatten().tolist()),
+                     str(padded_img3.flatten().tolist())]
+
+    report.set(str(report.get()) + ("\n[+] Run length Encoding started .. "))
+    t1 = ThreadWithReturnValue(target=run_length_encoding, args=(flattenImages[0],))
+    t2 = ThreadWithReturnValue(target=run_length_encoding, args=(flattenImages[1],))
+    t3 = ThreadWithReturnValue(target=run_length_encoding, args=(flattenImages[2],))
 
     t1.start()
     t2.start()
     t3.start()
 
+    bitstream1 = t1.join()
+    bitstream2 = t2.join()
+    bitstream3 = t3.join()
+
+    bitsream = bitstream1 + bitstream2 + bitstream3
+    CodedbitsSize = ((len(bitsream) / 2) * 0.000000125)
+
     report.set(str(report.get()) + ("\n[+] Encoding complete .. "))
-    report.set(str(report.get()) + ("\n[+] Preparing to save the encoded text .. "))
 
-    bitstream1, tree1 = t1.join()
-    bitstream2, tree2 = t2.join()
-    bitstream3, tree3 = t3.join()
-
-    bitstream = bitstream1 + "Chnl_Chng" + bitstream2 + " " + bitstream3
+    return [[bitstream1, bitstream2, bitstream3], padded_img.shape]
 
 
-    # TODO the objective is not to save the file here but to actually store it in the memory and compare it with the
-    #  original image size
+def decodeImage(encodedText, h, w):
+    # Decoding text
+    imageR = run_length_decoding(encodedText)
 
+    # Cleaning Results
+    imageR = imageR[1:-1]
+    res = imageR.split(',')
+    res = np.array(res)
+    res = res.astype(np.float)
+    array = np.array([[res[i + j * w] for i in range(w)] for j in range(h)])
 
-    # # Written to image.txt
-    # file1 = open(saveAt+"/image.txt", "w")
-    # file1.write(bitstream)
-    # report.set(str(report.get()) + ("\n[+] '.txt' File Saved .. "))
-    #
-    # report.set(str(report.get()) + ("\n\n\n[+] All Processes complete .. "))
-    # file1.close()
-    #
-    # return [[bitstream1, bitstream2, bitstream3],[tree1, tree2, tree3],padded_img.shape]
-
-    # calculate the number of bits to transmit for each channel
-    # and write them to an output file
-    # file = open("CompressedImage.asfh", "w")
-    # yBitsToTransmit = str()
-    # for value in yEncoded:
-    #     yBitsToTransmit += yHuffman[value]
-    #
-    # crBitsToTransmit = str()
-    # for value in crEncoded:
-    #     crBitsToTransmit += crHuffman[value]
-    #
-    # cbBitsToTransmit = str()
-    # for value in cbEncoded:
-    #     cbBitsToTransmit += cbHuffman[value]
-    #
-    # if file.writable():
-    #     file.write(yBitsToTransmit + "\n" + crBitsToTransmit + "\n" + cbBitsToTransmit)
-    # file.close()
-
-    totalNumberOfBitsAfterCompression = len(bitstream1) + len(bitstream2) + len(bitstream3)
-    print(totalNumberOfBitsAfterCompression)
-   # print("Compression Ratio is " + str(np.round(totalNumberOfBitsWithoutCompression / totalNumberOfBitsAfterCompression, 1)))
-
-
-def getActualImage(array, h, w):
     # loop for constructing intensity matrix form frequency matrix (IDCT and all)
     i = 0
-    j = 0
-    k = 0
-
     # initialisation of compressed image
     padded_img = np.zeros((h, w))
 
@@ -206,27 +202,16 @@ def getActualImage(array, h, w):
     # clamping to  8-bit max-min values
     padded_img[padded_img > 255] = 255
     padded_img[padded_img < 0] = 0
-
     # compressed image is written into compressed_image.mp file
     return padded_img
 
 
-def decode(imageR, H, W):
-    res = imageR.strip('][').split(', ')
-
-    res = np.array(res)
-    res = res.astype(np.float)
-
-    return getActualImage(np.array([[res[i + j * W] for i in range(W)] for j in range(H)]), H, W)
-
-
-def decodeImg(encode, saveAt, report, ratio):
-    H, W = encode[2]
-    report.set(str(report.get()) + ("\n[+] Huffman decoding started  .. "))
-
-    t1 = ThreadWithReturnValue(target=decode, args=(Huffman_Decoding(encode[0][0], encode[1][0]), H, W,))
-    t2 = ThreadWithReturnValue(target=decode, args=(Huffman_Decoding(encode[0][1], encode[1][1]), H, W,))
-    t3 = ThreadWithReturnValue(target=decode, args=(Huffman_Decoding(encode[0][2], encode[1][2]), H, W,))
+def decodingDriver(encode, saveAt, report):
+    H, W = encode[1]
+    report.set(str(report.get()) + ("\n[+] Run length decoding started  .. "))
+    t1 = ThreadWithReturnValue(target=decodeImage, args=(encode[0][0], H, W,))
+    t2 = ThreadWithReturnValue(target=decodeImage, args=(encode[0][1], H, W))
+    t3 = ThreadWithReturnValue(target=decodeImage, args=(encode[0][2], H, W,))
 
     report.set(str(report.get()) + ("\n[+] Threads Started .. "))
 
@@ -234,17 +219,19 @@ def decodeImg(encode, saveAt, report, ratio):
     t2.start()
     t3.start()
 
-    report.set(str(report.get()) + ("\n[+] Decoded images buildup Complete .. "))
-
     imageR = t1.join()
     imageG = t2.join()
     imageB = t3.join()
 
-    # real -> decreasing -> converting to code -> increasing the size -> on original size we are creating the image again
-
+    # All threads completed
+    report.set(str(report.get()) + ("\n[+] Decoded images buildup Complete .. "))
     report.set(str(report.get()) + ("\n[+] Merging decoded images .. "))
     image = cv2.merge([imageR, imageG, imageB])
-
     cv2.imwrite(saveAt + '/final.bmp', np.uint8(image))
-    report.set(str(report.get()) + ("\n\n[+] Final Decoded image Saved .. "))
-    report.set(report.get() + "\n[+] Compression Complete..")
+
+    # Final Reporting
+    report.set(str(report.get()) + ("\n[+] Final Decoded image Saved .. "))
+    report.set(str(report.get()) + ("\n\n[+]  " + 50 * "-"))
+    report.set(str(report.get()) + ("\n[+] Compression file size is " + str(np.round(CodedbitsSize, 1)) + " MB"))
+    report.set(str(report.get()) + ("\n[+] Compression ratio is " + str(np.round(encodedSize / CodedbitsSize, 1))))
+    report.set(str(report.get()) + ("\n[+] Compression percentage is " + str(np.round(encodedSize / CodedbitsSize, 1))))

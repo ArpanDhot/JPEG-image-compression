@@ -1,7 +1,8 @@
 from tkinter import *
 from tkinter import messagebox, filedialog
 import threading
-from en_de_code import encodeImage,decodeImg
+from en_de_code import *
+
 
 class Main:
     # Creating the window
@@ -24,9 +25,9 @@ class Main:
     imageTo = StringVar()
     imagePath = StringVar()
     encodeOption = IntVar()
-    compression = IntVar()
+    compression = DoubleVar()
     encodeOption.set(1)
-    compression.set(90)
+    compression.set(0.5)
 
     # Creating labels font
     headerFont = ("Calibre", int(winHeight / 15), "bold")
@@ -40,8 +41,8 @@ class Main:
     labelTwo = Label(master, bg=foregroundColor, fg=textColor, text="")
     labelFour = Label(master, textvariable=report, bg=foregroundColor, fg=textColor, font=simpleTextFont2, anchor=NW,
                       justify=LEFT)
-    labelTen = Label(master, bg=foregroundColor, fg=textColor, text="Compression Strength", font=simpleTextFont2, anchor=W)
-    labelEleven = Label(master, bg=foregroundColor, fg=textColor2, text="------ Compression strength " + str("-" * 50),
+    labelTen = Label(master, bg=foregroundColor, fg=textColor, text="Resizing ration", font=simpleTextFont2, anchor=W)
+    labelEleven = Label(master, bg=foregroundColor, fg=textColor2, text="----- Compression strength " + str("-" * 40),
                      font=simpleTextFont2)
 
     textEntryOne = Text(master, font=textEntryFont, bg="white", fg="black", bd=0)
@@ -80,13 +81,21 @@ class Main:
     def ImageCompressionEngine(self):
         Main.report.set("")
         if Main.imagePath.get() != "" and Main.imageTo.get() != "":
-            Main.compression.set(int(self.drop.get("1.0", "end-1c")))
+            Main.compression.set(float(self.drop.get("1.0", "end-1c")))
+            if 0.0 < Main.compression.get() <= 1:
 
-            if bool(Main.encodeOption.get()):
-                Main.report.set(Main.report.get()+"\n[+] Compression started..")
-                Main.report.set(Main.report.get()+"\n[+] Huffman Encoding started..")
-                encode = encodeImage(Main.imagePath.get(),Main.imageTo.get(),Main.report)
-                decodeImg(encode,Main.imageTo.get(),Main.report,Main.compression.get()/100)
+                if bool(Main.encodeOption.get()):
+                    Main.report.set(Main.report.get()+"\n[+] Compression started..")
+
+                    # Encoding
+                    encode = encodingDriver(Main.imagePath.get(),Main.imageTo.get(),Main.report)
+                    Main.report.set(Main.report.get()+"\n[+] Compression Complete..")
+
+                    # Decoding
+                    decodingDriver(encode,Main.imageTo.get(),Main.report)
+            else:
+                messagebox.showinfo("showinfo", "0 < Resizing ratio < 1")
+
         else:
             messagebox.showinfo("showinfo", "Please select Both paths")
 
@@ -106,10 +115,6 @@ class Main:
 
         self.textEntryOne.place(relx=0.48 + 0.05, rely=0.24, relwidth=0.3, relheight=0.04)
         self.textEntryTwo.place(relx=0.48 + 0.05, rely=0.32, relwidth=0.3, relheight=0.04)
-
-        self.labelEleven.place(relx=0.48 + 0.05, rely=0.4, relwidth=0.3, relheight=0.04)
-        self.labelTen.place(relx=0.48 + 0.05, rely=0.48, relwidth=0.145, relheight=0.04)
-        self.drop.place(relx=0.48 + 0.2, rely=0.48, relwidth=0.145, relheight=0.04)
 
         self.buttonOne.place(relx=0.84, rely=0.24, relwidth=0.08, relheight=0.04)
         self.buttonTwo.place(relx=0.84, rely=0.32, relwidth=0.08, relheight=0.04)

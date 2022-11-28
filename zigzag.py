@@ -1,6 +1,5 @@
 import numpy as np
 
-
 def zigzag(input):
     # initializing the variables
     # ----------------------------------
