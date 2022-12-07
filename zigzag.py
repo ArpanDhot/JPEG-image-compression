@@ -83,7 +83,7 @@ def zigzag(input):
     return output
 
 
-def inverse_zigzag(input, vmax, hmax):
+def inverseZigzag(input, vmax, hmax):
     # print input.shape
 
     # initializing the variables

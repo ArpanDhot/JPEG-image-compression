@@ -1,4 +1,4 @@
-def run_length_encoding(seq):
+def runLengthEncoding(seq):
     compressed = []
     count = 1
     char = seq[0]
@@ -20,7 +20,7 @@ def run_length_encoding(seq):
     return bits
 
 
-def run_length_decoding(compressed_seq):
+def runLengthDecoding(compressed_seq):
 
     seq = ''
     for i in range(0, len(compressed_seq)):
