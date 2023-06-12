@@ -29,7 +29,7 @@ After dividing the image into 8x8 blocks, the next step would be to pad the imag
 
 The next step of JPEG compression is to apply Discrete Cosine Transform (DCT) to each block separately, where the output of each DCT is an 8x8 matrix of coefficients. DCT works by converting the spatial information into numeric (frequency information) data which can then be manipulated. The data is manipulated in the next step, called quantization; in this stage, less significant DCT coefficients are removed, which causes this method to be lossless. The DCT coefficients are divided by the data in the quantization matrix to obtain the quantized coefficients. Using zigzag scanning, we order the quantized coefficients with the higher energy at the top, followed by the lower energy and zero values at the bottom.
 
-![](./ReadMe/Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.003.png)Afterwards, Run-Length Encoding is applied to the data. Run-length encoding (RLE) method compresses images in a lossless manner, storing the redundant data in a sequence as a single value. The image can then be reconstructed during decompression exactly from this data.
+Afterwards, Run-Length Encoding is applied to the data. Run-length encoding (RLE) method compresses images in a lossless manner, storing the redundant data in a sequence as a single value. The image can then be reconstructed during decompression exactly from this data.
 
 
 |![](./ReadMe/Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.004.png)|
