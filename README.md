@@ -32,9 +32,9 @@ The next step of JPEG compression is to apply Discrete Cosine Transform (DCT) to
 Afterwards, Run-Length Encoding is applied to the data. Run-length encoding (RLE) method compresses images in a lossless manner, storing the redundant data in a sequence as a single value. The image can then be reconstructed during decompression exactly from this data.
 
 
-|![](./ReadMe/Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.004.png)|
+|<p></p><p>![](./ReadMe/Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.004.png)</p>|
 | :-: |
-|After encoding, we store the three channels' encoded data in the memory in the bitstream variable. As shown in the terminal, we next printed out the bitstream, which can be seen at the bottom of the image.|
+|After encoding, we store the three channels' encoded data in the memory in the bitstream variable. As shown in the terminal, we next printed out the bitstream, which can be seen at the bottom of the image.</p>|
 
 
 In order to return to the original image, we have to decompress the encoded data after compressing the image. During the decompression process, the header information, as well as the quantisation factors, are removed. It is necessary to extract the data from the Run-Length encoded bit stream. In the next step, each coefficient is scaled using inverse quantisation, and the coefficients are then prepared for the inverse DCT by inverse quantisation. After the 8x8 pixel blocks are put into the image buffer, they are converted back to RGB images.
@@ -56,13 +56,13 @@ The table above shows that the original images of all four images could be compr
 
 
 
-|![](./ReadMe/Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.005.png)|![](./ReadMe/Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.006.png)|
+|<p>![](./ReadMe/Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.005.png)</p>|<p>![](./ReadMe/Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.006.png)</p>|
 | :- | :- |
 |<p>The dinosaur image was inputted as raw, so it has not been converted to greyscale, even though the visual is grey. This image got split into RGB channels, and JPEG compression was applied to every channel. Each channel is encoded using Run-Length encoding (RLE). Furthermore, as shown in the image above, the image on the right is reconstructed, which is of lower quality than the original image on the left. This is because RLE in grey-level images has constant intensity on</p><p>similar consecutive pixels. This results in a reduction in file size in the decompressed image.</p>||
 
 
 
-|![](./ReadMe/Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.007.png)|![](./ReadMe/Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.008.png)|
+|<p>![](./ReadMe/Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.007.png)</p>|<p>![](./ReadMe/Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.008.png)</p>|
 | :- | :- |
 |<p>As described above, the image has reduced in size as a result of Run-Length Encoding. In the images above, one can see such a contrast between the original image and the reconstructed image. The left image shows the original image, and the right image shows the reconstructed</p><p>image. The sizes went from 1.17 MB to 900 KB.</p>||
 
