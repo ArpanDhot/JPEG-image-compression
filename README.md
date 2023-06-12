@@ -54,6 +54,12 @@ Images in the appendix and the data. Please click on the image number to go to t
 
 The table above shows that the original images of all four images could be compressed by at least 50%, resulting in a consistent compression ratio of 1.9 for all four images. After evaluating the results, we used the mean squared error (MSE) and PSNR. The mean squared error measures the squared error between the original and compressed images. If the MSE is low, then there is a low error rate between the original and compressed images, which means that the image quality is relatively equal. In general, a higher PSNR indicates a better compression rate.
 
+| | |
+| :- | :- |
+|![](./ReadMe/Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.005.png) | ![](./ReadMe/Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.006.png)|
+|The dinosaur image was inputted as raw, so it has not been converted to greyscale, even though the visual is grey. This image got split into RGB channels, and JPEG compression was applied to every channel. Each channel is encoded using Run-Length encoding (RLE). Furthermore, as shown in the image above, the image on the right is reconstructed, which is of lower quality than the original image on the left. This is because RLE in grey-level images has constant intensity on similar consecutive pixels. This results in a reduction in file size in the decompressed image.| |
+
+
 |<p>![](./ReadMe/Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.005.png)</p>|<p>![](./ReadMe/Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.006.png)</p>|
 | :- | :- |
 |<p>The dinosaur image was inputted as raw, so it has not been converted to greyscale, even though the visual is grey. This image got split into RGB channels, and JPEG compression was applied to every channel. Each channel is encoded using Run-Length encoding (RLE). Furthermore, as shown in the image above, the image on the right is reconstructed, which is of lower quality than the original image on the left. This is because RLE in grey-level images has constant intensity on</p><p>similar consecutive pixels. This results in a reduction in file size in the decompressed image.</p>||
