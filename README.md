@@ -1,34 +1,3 @@
-﻿Module Code: CS3IA16 Assignment report Title: Image compression
-
-Student Number: 29007309, 28003801 Date (when the work completed): 05/12/2022
-
-Actual hrs spent for the assignment: 25
-
-Assignment evaluation (3 key points): interesting, challenging, insightful
-
-
-
-# Table of Contents
-[Abstract	2](#_bookmark0)
-
-[Introduction	2](#_bookmark1)
-
-[Methodology	2](#_bookmark2)
-
-[Compression	3](#_bookmark3)
-
-[Results and evaluations	4](#_bookmark4)
-
-[Conclusion	6](#_bookmark5)
-
-[Acknowledgments	6](#_bookmark6)
-
-[References	6](#_bookmark7)
-
-[Appendix	7](#_bookmark8)
-
-[Code	15](#_bookmark9)
-
 # <a name="_bookmark0"></a>Abstract
 There is no doubt that the modern world relies on large amounts of data in the form of images, videos, and other media types to carry out business, communicate, and connect with one another. In addition to the enormous amount of data that is generated, there is also the need for a large amount of storage to store all of this data, which can prove expensive as more data is generated. In most cases, it is primarily redundant data that humans cannot even perceive that can be as large as tens to hundreds of megabytes or gigabytes. This then raises the question of how this redundant data can be removed so that the size of the images can be smaller, thus saving on storage space and reducing the cost of the images. This question is answered by a process called image compression.
 
@@ -43,7 +12,7 @@ This report will provide a detailed JPEG compression method and the steps taken 
 # <a name="_bookmark2"></a>Methodology
 Below is an image of the steps taken in JPEG to reach compression as well as decompression. We will go into detail about each step, showing how we implemented the different stages and features.
 
-![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.001.png)
+![](.ReadMe/Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.001.png)
 
 # <a name="_bookmark3"></a>Compression
 As part of this project, we use Python with libraries such as OpenCV, Math, and NumPy. Using OpenCV, we read an image without changing its content, such as its colour, using the imread() function. The image is then split into three channels and stored in three variables. Having chosen one channel, we first gauged the height and width of the image, so we could determine if our jpeg compression algorithm would allow us to divide it into even blocks based on the height and width of the image. The JPEG compression algorithm works by dividing images into blocks of nxn in order to compress them. A block size of 8x8 was chosen for this project because it is standard for JPEG. Alternatively, a larger block size, such as 32x32 or 64x64, could have been implemented, but the downside of using a larger block size is that the image will be less smooth over each block, which will reduce the compression rate of the image. It could have been possible to choose a smaller block size; however, this would have made the quantization step less flexible, resulting in little to no compression.
@@ -53,17 +22,17 @@ After dividing the image into 8x8 blocks, the next step would be to pad the imag
 
 
 
-|<p></p><p>![A picture containing text  Description automatically generated](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.002.jpeg)</p>|
+|<p></p><p>![](.ReadMe/Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.002.jpeg)</p>|
 | :- |
 |<p>This image shows the block preparation and image padding that needs to be done on the image, here we divided the image into 8x8 blocks. The white space represents the space that will get</p><p>padded by the zeroes.</p>|
 
 
 The next step of JPEG compression is to apply Discrete Cosine Transform (DCT) to each block separately, where the output of each DCT is an 8x8 matrix of coefficients. DCT works by converting the spatial information into numeric (frequency information) data which can then be manipulated. The data is manipulated in the next step, called quantization; in this stage, less significant DCT coefficients are removed, which causes this method to be lossless. The DCT coefficients are divided by the data in the quantization matrix to obtain the quantized coefficients. Using zigzag scanning, we order the quantized coefficients with the higher energy at the top, followed by the lower energy and zero values at the bottom.
 
-![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.003.png)Afterwards, Run-Length Encoding is applied to the data. Run-length encoding (RLE) method compresses images in a lossless manner, storing the redundant data in a sequence as a single value. The image can then be reconstructed during decompression exactly from this data.
+![](.ReadMe/Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.003.png)Afterwards, Run-Length Encoding is applied to the data. Run-length encoding (RLE) method compresses images in a lossless manner, storing the redundant data in a sequence as a single value. The image can then be reconstructed during decompression exactly from this data.
 
 
-|![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.004.png)|
+|![](.ReadMe/Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.004.png)|
 | :-: |
 |After encoding, we store the three channels' encoded data in the memory in the bitstream variable. As shown in the terminal, we next printed out the bitstream, which can be seen at the bottom of the image.|
 
@@ -87,13 +56,13 @@ The table above shows that the original images of all four images could be compr
 
 
 
-|![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.005.png)|![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.006.png)|
+|![](.ReadMe/Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.005.png)|![](ReadMe/Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.006.png)|
 | :- | :- |
 |<p>The dinosaur image was inputted as raw, so it has not been converted to greyscale, even though the visual is grey. This image got split into RGB channels, and JPEG compression was applied to every channel. Each channel is encoded using Run-Length encoding (RLE). Furthermore, as shown in the image above, the image on the right is reconstructed, which is of lower quality than the original image on the left. This is because RLE in grey-level images has constant intensity on</p><p>similar consecutive pixels. This results in a reduction in file size in the decompressed image.</p>||
 
 
 
-|![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.007.png)|![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.008.png)|
+|![](.ReadMe/Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.007.png)|![](ReadMe/Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.008.png)|
 | :- | :- |
 |<p>As described above, the image has reduced in size as a result of Run-Length Encoding. In the images above, one can see such a contrast between the original image and the reconstructed image. The left image shows the original image, and the right image shows the reconstructed</p><p>image. The sizes went from 1.17 MB to 900 KB.</p>||
 
@@ -115,364 +84,3 @@ When undergoing this project, we used external sources for guidance to create th
 1. GeeksforGeeks. (2020). *Process Of JPEG Data compression*. [online] Available at: https://[www.geeksforgeeks.org/process-of-jpeg-data-compression/.](http://www.geeksforgeeks.org/process-of-jpeg-data-compression/)
 1. Dias, D. (2017). *JPEG Compression Algorithm*. [online] Medium. Available at: https://medium.com/breaktheloop/jpeg-compression-algorithm-969af03773da.
 1. [www.javatpoint.com.](http://www.javatpoint.com/) (n.d.). *JPEG Compression - Javatpoint*. [online] Available at: https://[www.javatpoint.com/jpeg-compression](http://www.javatpoint.com/jpeg-compression) [Accessed 5 Dec. 2022].
-
-# <a name="_bookmark8"></a>Appendix
-
-1 - Image
-
-
-|![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.009.jpeg)|In the image on the left, you can see the steps involved in the compression as well as the data regarding the compression. In this picture, you can see how the JPEG algorithm is applied at the various stages of the process. In the Metadata section at the bottom of the image, you will be able to see the different metrics that have been used to evaluate the image.|
-| :- | :- |
-|![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.010.jpeg)|The image in the 8x8 dct form.|
-|![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.011.png)|Blue decompressed channel and exported as image.|
-
-||Green decompressed channel and exported as image.|
-| :- | :- |
-||Red decompressed channel and exported as image.|
-||Final decompressed image.|
-
-![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.012.png)
-
-2. Image
-
-
-|![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.013.jpeg)|In the image on the left, you can see the steps involved in the compression as well as the data regarding the compression. In this picture, you can see how the JPEG algorithm is applied at the various stages of the process. In the Metadata section at the bottom of the image, you will be able to see the different metrics that have been used to evaluate the image.|
-| :- | :- |
-|![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.014.jpeg)|The image in the 8x8 dct form.|
-|![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.015.png)|Blue decompressed channel and exported as image.|
-
-||Green decompressed channel and exported as image.|
-| :- | :- |
-||Red decompressed channel and exported as image.|
-|![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.016.jpeg)|Final decompressed image.|
-
-![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.017.png)
-
-2. Image
-
-
-|![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.018.jpeg)|In the image on the left, you can see the steps involved in the compression as well as the data regarding the compression. In this picture, you can see how the JPEG algorithm is applied at the various stages of the process. In the Metadata section at the bottom of the image, you will be able to see the different metrics that have been used to evaluate the image.|
-| :- | :- |
-|![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.019.jpeg)|The image in the 8x8 dct form.|
-|![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.020.png)|Red decompressed channel and exported as image.|
-
-|![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.021.jpeg)|Green decompressed channel and exported as image.|
-| :- | :- |
-||Red decompressed channel and exported as image.|
-||Final decompressed image.|
-
-![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.022.png)
-
-4 - Image
-
-
-|![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.023.jpeg)|In the image on the left, you can see the steps involved in the compression as well as the data regarding the compression. In this picture, you can see how the JPEG algorithm is applied at the various stages of the process. In the Metadata section at the bottom of the image, you will be able to see the different metrics that have been used to evaluate the image.|
-| :- | :- |
-|![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.024.png)|The image in the 8x8 dct form.|
-|![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.025.jpeg)|Red decompressed channel and exported as image.|
-
-||Green decompressed channel and exported as image.|
-| :- | :- |
-||Red decompressed channel and exported as image.|
-|![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.026.jpeg)|Final decompressed image.|
-
-![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.027.png)
-
-# <a name="_bookmark9"></a>Code
-
-![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.028.jpeg)
-
-![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.029.jpeg)
-
-|QUANTIZATION - MAT  = np.array(||||||
-| :- | :- | :- | :- | :- | :- |
-|<p>I Ii 6,	11 , 10,	1 6,	24,	4 0,  51,  61I,	I 12,  12,  14 ,  1 9,	26,</p><p></p><p></p><p></p><p></p><p></p><p></p><p># If resizing needed then use this code</p><p># def ImgResize(image, resize)</p><p>#	global imagePath</p><p>#	imagePath = image</p><p>#	try:</p><p>#	imgl = cv2.imread(image, cv2.1MREAD COLOR)</p><p>#		b,	g, r	= cv2.split(imgl) #	except:</p><p>img = Image.open(image)</p><p>#	imgl = np.array(img)</p><p>#	b, g,  r = cv2.split(imgl)</p><p>#</p><p>#	[h, w]  = b.shape</p><p>#</p><p>#	h	int(h	resize)</p><p>#	w	int(w	resize)</p><p>#</p><p>#	 b   cv2.resize (b,   (w,  h},  interpolation=cv2.INTER\_AREA #	g  cv2.resize(g, (w,  h),  interpolation=cv2.INTER\_AREA #	 r = cv2.resize(r, (w,  h),   interpolation=cv2.INTER\_AREA #</p><p>#	return cv2.merge([b, g,  r]l</p><p></p><p></p><p># Encoding is being done here</p><p>def  encodingDriver(image, saveAt, report): try:</p><p>imgl = cv2.imread(image, cv2.IMREAD\_COLOR)</p><p>except:</p><p>img = Image.open(image) imgl = np.array(img)</p><p></p><p>global imgOrgPath imgOrgPath = image</p><p>report.set(str(report.get()) +  ("\n[+I En•:\_·,,iir1:i :.:\_:·</p><p></p><p>b, g, r = cv2.split(imgl}</p><p>report.set(str(report.get()l + ("\nl+I l:-r:-'•!•· -·::.Ji- ..	"</p>|<p>58,</p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p>)</p><p>)</p><p>)</p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p>+</p><p></p><p></p><p></p><p>))</p>|<p>60,</p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p>str</p>|<p>55],  I 14 ,  13,</p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p>("")))</p>|16,  24,||
-
-![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.030.png)![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.031.png)**en\_de\_code.py** import os import cv2 import math
-
-import numpy as np
-
-from zigzag import\* from Threads import \* from PIL import Image
-
-import cv2
-
-from runLengthEncoding import \*
-
-import  PSNR
-
-\# defining block size
-
-blockSize = 8
-
-global encodedSize, CodedbitsSize imgOrgPath =None
-
-\# Quantization Matrix
-
-
-
-|40,|57,|69,  561,||||||||||||||||
-| :- | :- | -: | :- | :- | :- | :- | :- | :- | :- | :- | :- | :- | :- | :- | :- | :- | :- |
-||I 14,|17, 22,|2 9,|51,|87,|80,|62 I,|I 18,|22,|37,|56,|68,|109, 103, 77 J,|[24,|35,|55,||
-|<p>64, 81,  104, 11 3,</p><p>I 4 9,	64,	78,</p>|<p>92 I,</p><p>87,</p>|<p></p><p>103,  121,  120,</p>|<p></p><p>10l ] ,</p>|<p></p><p>I 72,</p>|<p></p><p>92,</p>|<p></p><p>95,</p>|<p></p><p>98,</p>|<p></p><p>112,</p>|<p></p><p>100, 103,</p>|<p></p><p>991 I I</p>||||||||
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.032.png)
-
-
-![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.033.png)# get size of the image
-
-[h, w]	b.shape
-
-
-\# No of b:ocks needed
-
-height= h width= w
-
-h	np.float32(hl w = np.float32(w)
-
-Calcuiation
-
-
-nbh	math.ceil(h / blockSize) nbh	np.int32(nbhl
-
-nbw	math.ceil(w / blockSize) nbw	np.int32(nbw)
-
-\# Pad the image, because sometime image size is not dividable to block size
-
-\# get the size of padded image by multip:ying biock size by number of biocks in height/width
-
-height of padded image
-
-H = blockSize \* nbh
-
-\# width of padded image
-
-W = blockSize \* nbw
-
-\# create *a* numpy zero matrix with sjze of H,W
-
-paddedlmg = np.zeros((H, W)) paddedlmg2	np.zeros((H, W)) paddedlmg3 = np.zeros((H, W))
-
-\# or this other way here
-
-![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.034.png)![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.034.png)![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.035.png)paddedlmg[0:height, □:width] = b[0:height, □:width]
-
-paddedlmg2[0:height, U:width]	g[0:height, 0:width] paddedlmg3[0:height, 0:width] = r[U:height, U:width]
-
-\# start encoding:
-
-\# divide image into block size by b ock size (here: 8-by-8) blocks
-
-\# To each b:ock app:y 2D discrete cosine transform
-
-\# reorder OCT coefficients in zig-zag order
-
-\# reshaped it back to block size by b ock size (here: 8-by-8)
-
-'.' *:.>r* i	range(nbh):
-
-
-\# Compute rowlndl rowlnd2 =
-
-start and end row index of  the block
-
-*i* \* blockSize rowlndl + blockSize
-
-
-tcr	j : ,. rar:ge (nbw):
-
-\# Compute start & end column index of the block
-
-collndl	j \* blockSize co1Ind2 = colindl + blockSize
-
-
-rBlock gBlock bBlock
-
-
-
-![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.034.png)paddedlmgJ[rowindl: rowlnd2, colindl: co1Ind2] paddedimg2[rowindl: rowind2, collndl: co1Ind2] paddedlmg[rowlndl: rowlnd2, colindl: co1Ind2]
-
-
-\# apply 20 discrete cosine transform to the selected b:ock
-
-rDCT cv2.dct(r8lock) gDCT cv2.dct(gBlock) bDCT  cv2.dct(bBlock)
-
-
-rDCTNormalized gDCTNormalized bDCTNormalized
-
-np.divide(rDCT, QUANTIZATION\_MAT).astype(int) np.divide(gDCT, QUANTIZATION\_MAT).astype(in ) np.divide(bDCT, QUANTIZATION\_MAT).astype(int)
-
-
-![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.034.png)# reorder DC7 coefficients in zig zag order by calling zigzag function
-
-\# it	will qive you a one dimentional array
-
-![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.036.jpeg)
-
-![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.037.jpeg)
-
-I I I)
-
-\- l  1 •	· . I
-
-I I I)
-
-,I ,\_ [	r  . *}*· . I I J
-
-I
-
-I I \_"' I . 1 "'. I I ,	J	\_: I ,- I  . · ·  ;, ·  1
-![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.038.png)
-
-
-![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.039.png)
-
-**runlengthencoding.py**
-
-![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.040.jpeg)
-
-![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.041.png)
-
-
-![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.042.png)
-
-**zigzag.py**
-
-import numpy as np
-
-def	zigzag (input):
-
-\# initializing the variables
-
-![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.043.png)#
-
-h	0
-
-V = 0
-
-vmin	0
-
-hmin	0
-
-
-vmax hmax
-
-input.shape[O] input.shape[l]
-
-
-\# print(vmax ,hmax )
-
-i = 0
-
-![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.043.png)output= np.zeros((vmax \* hmax)) #
-
-1\.,,rh\_L\_e  ( (v  < vmax)  and  (h < hmax)) :
-
-if	( (h  + v)	% 2)	==	0:	# going up
-
-if	(v == vmin):
-
--II print(l)
-
-output[i] = input[v, h]	# if we got to the first line
-
-i.f	(h == hmax)
-
-V = *V*  + 1
-
-else:
-
-h	h +
-
-
-
-
-
-column
-
-i = i + 1
-
-e if ((h == hmax - 1) and (v < vmax))	# if we got to the last
-
--II print(2)
-
-output [i]
-
-V	V + 1
-
-i = i + 1
-
-input[v,  h]
-
-
-e if ((v > vmin} and (h < hmax - 1))
-
-\# print (3)
-
-output[i] = input[v, h]
-
-V = V - 1
-
-h	h + 1
-
-i = i +
-
-
-
-\# all other cases
-
-
-e:se:	# going down
-
-
-
-line
-
-if ((v == vmax - 1) and (h <= hmax - 1))	# if we got to the last
-
-\# print(4)
-
-output [ i]
-
-8. h + 1
-8. i + 1
-
-input[v, h]
-
-
-eiif (h == hmin)	# if we got to the first column
-
-\# print(S)
-
-output[i] = input[v, h]
-
-if	(v  == vmax -  1) :
-
-h = h + 1
-
-![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.044.jpeg)
-
-![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.045.jpeg)
-
-![](Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.046.jpeg)
