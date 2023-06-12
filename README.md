@@ -12,7 +12,7 @@ This report will provide a detailed JPEG compression method and the steps taken 
 # <a name="_bookmark2"></a>Methodology
 Below is an image of the steps taken in JPEG to reach compression as well as decompression. We will go into detail about each step, showing how we implemented the different stages and features.
 
-![](./ReadMe/Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.001.png)
+![](./ReadMe/1.png)
 
 # <a name="_bookmark3"></a>Compression
 As part of this project, we use Python with libraries such as OpenCV, Math, and NumPy. Using OpenCV, we read an image without changing its content, such as its colour, using the imread() function. The image is then split into three channels and stored in three variables. Having chosen one channel, we first gauged the height and width of the image, so we could determine if our jpeg compression algorithm would allow us to divide it into even blocks based on the height and width of the image. The JPEG compression algorithm works by dividing images into blocks of nxn in order to compress them. A block size of 8x8 was chosen for this project because it is standard for JPEG. Alternatively, a larger block size, such as 32x32 or 64x64, could have been implemented, but the downside of using a larger block size is that the image will be less smooth over each block, which will reduce the compression rate of the image. It could have been possible to choose a smaller block size; however, this would have made the quantization step less flexible, resulting in little to no compression.
@@ -22,7 +22,7 @@ After dividing the image into 8x8 blocks, the next step would be to pad the imag
 
 
 
-|<p></p><p>![](./ReadMe/Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.002.jpeg)</p>|
+|<p></p><p>![](./ReadMe/2.png)</p>|
 | :- |
 |<p>This image shows the block preparation and image padding that needs to be done on the image, here we divided the image into 8x8 blocks. The white space represents the space that will get</p><p>padded by the zeroes.</p>|
 
@@ -32,7 +32,7 @@ The next step of JPEG compression is to apply Discrete Cosine Transform (DCT) to
 Afterwards, Run-Length Encoding is applied to the data. Run-length encoding (RLE) method compresses images in a lossless manner, storing the redundant data in a sequence as a single value. The image can then be reconstructed during decompression exactly from this data.
 
 
-|<p></p><p>![](./ReadMe/Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.004.png)</p>|
+|<p></p><p>![](./ReadMe/3.png)</p>|
 | :-: |
 |After encoding, we store the three channels' encoded data in the memory in the bitstream variable. As shown in the terminal, we next printed out the bitstream, which can be seen at the bottom of the image.</p>|
 
@@ -54,18 +54,12 @@ Images in the appendix and the data. Please click on the image number to go to t
 
 The table above shows that the original images of all four images could be compressed by at least 50%, resulting in a consistent compression ratio of 1.9 for all four images. After evaluating the results, we used the mean squared error (MSE) and PSNR. The mean squared error measures the squared error between the original and compressed images. If the MSE is low, then there is a low error rate between the original and compressed images, which means that the image quality is relatively equal. In general, a higher PSNR indicates a better compression rate.
 
-| | |
-| :- | :- |
-|![](./ReadMe/Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.005.png) | ![](./ReadMe/Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.006.png)|
-|The dinosaur image was inputted as raw, so it has not been converted to greyscale, even though the visual is grey. This image got split into RGB channels, and JPEG compression was applied to every channel. Each channel is encoded using Run-Length encoding (RLE). Furthermore, as shown in the image above, the image on the right is reconstructed, which is of lower quality than the original image on the left. This is because RLE in grey-level images has constant intensity on similar consecutive pixels. This results in a reduction in file size in the decompressed image.| |
-
-
-|<p>![](./ReadMe/Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.005.png)</p>|<p>![](./ReadMe/Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.006.png)</p>|
+|<p>![](./ReadMe/4.png)</p>|<p>![](./ReadMe/5.png)</p>|
 | :- | :- |
 |<p>The dinosaur image was inputted as raw, so it has not been converted to greyscale, even though the visual is grey. This image got split into RGB channels, and JPEG compression was applied to every channel. Each channel is encoded using Run-Length encoding (RLE). Furthermore, as shown in the image above, the image on the right is reconstructed, which is of lower quality than the original image on the left. This is because RLE in grey-level images has constant intensity on</p><p>similar consecutive pixels. This results in a reduction in file size in the decompressed image.</p>||
 
 
-|<p>![](./ReadMe/Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.007.png)</p>|<p>![](./ReadMe/Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.008.png)</p>|
+|<p>![](./ReadMe/6.png)</p>|<p>![](./ReadMe/7.png)</p>|
 | :- | :- |
 |<p>As described above, the image has reduced in size as a result of Run-Length Encoding. In the images above, one can see such a contrast between the original image and the reconstructed image. The left image shows the original image, and the right image shows the reconstructed</p><p>image. The sizes went from 1.17 MB to 900 KB.</p>||
 
