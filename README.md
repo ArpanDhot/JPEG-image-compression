@@ -12,7 +12,7 @@ This report will provide a detailed JPEG compression method and the steps taken 
 # <a name="_bookmark2"></a>Methodology
 Below is an image of the steps taken in JPEG to reach compression as well as decompression. We will go into detail about each step, showing how we implemented the different stages and features.
 
-![](./ReadME/Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.001.png)
+![](./ReadMe/Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.001.png)
 
 # <a name="_bookmark3"></a>Compression
 As part of this project, we use Python with libraries such as OpenCV, Math, and NumPy. Using OpenCV, we read an image without changing its content, such as its colour, using the imread() function. The image is then split into three channels and stored in three variables. Having chosen one channel, we first gauged the height and width of the image, so we could determine if our jpeg compression algorithm would allow us to divide it into even blocks based on the height and width of the image. The JPEG compression algorithm works by dividing images into blocks of nxn in order to compress them. A block size of 8x8 was chosen for this project because it is standard for JPEG. Alternatively, a larger block size, such as 32x32 or 64x64, could have been implemented, but the downside of using a larger block size is that the image will be less smooth over each block, which will reduce the compression rate of the image. It could have been possible to choose a smaller block size; however, this would have made the quantization step less flexible, resulting in little to no compression.
