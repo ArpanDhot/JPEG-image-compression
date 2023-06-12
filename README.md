@@ -56,15 +56,13 @@ The table above shows that the original images of all four images could be compr
 
 
 
-|<p>![](./ReadMe/Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.005.png)</p>|<p>![](./ReadMe/Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.006.png)</p>|
-| :- | :- |
-|<p>The dinosaur image was inputted as raw, so it has not been converted to greyscale, even though the visual is grey. This image got split into RGB channels, and JPEG compression was applied to every channel. Each channel is encoded using Run-Length encoding (RLE). Furthermore, as shown in the image above, the image on the right is reconstructed, which is of lower quality than the original image on the left. This is because RLE in grey-level images has constant intensity on</p><p>similar consecutive pixels. This results in a reduction in file size in the decompressed image.</p>||
 
 
 
-|<p>![](./ReadMe/Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.007.png)</p>|<p>![](./ReadMe/Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.008.png)</p>|
-| :- | :- |
-|<p>As described above, the image has reduced in size as a result of Run-Length Encoding. In the images above, one can see such a contrast between the original image and the reconstructed image. The left image shows the original image, and the right image shows the reconstructed</p><p>image. The sizes went from 1.17 MB to 900 KB.</p>||
+|<p align="center"><img src="./ReadMe/Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.007.png" /></p>|<p align="center"><img src="./ReadMe/Aspose.Words.3867ab57-56ef-4d4d-a4b6-5609bb676745.008.png" /></p>|
+| :-: | :-: |
+|As described above, the image has reduced in size as a result of Run-Length Encoding. In the images above, one can see such a contrast between the original image and the reconstructed image. The left image shows the original image, and the right image shows the reconstructed image. The sizes went from 1.17 MB to 900 KB.||
+
 
 
 There were several challenges to overcome, including splitting the image into three channels. After all, it differs from a greyscale image in that it does not need to be split into three channels. As a result, working with the three channels was challenging since a greyscale image only needed the jpeg process once, while the colour image required a jpeg algorithm for each channel. To decompress the data, each channel needs to be decompressed and then merged to produce an image.
